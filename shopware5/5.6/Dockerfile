@@ -1,0 +1,31 @@
+FROM php:5.6.38-fpm-alpine3.8
+MAINTAINER Linus Lotz<l.lotz@reply.de>
+ENV RUN_DEPS="bash icu-libs libgd libintl libxml2 mysql-client postgresql-libs"
+# ENV RUN_DEPS="bash icu-libs libgd libintl libxml2 mariadb-client-libs postgresql-libs"
+ENV BUILD_DEPS="${PHPIZE_DEPS} freetype-dev icu-dev libjpeg-turbo-dev libpng-dev libwebp-dev libxml2-dev libxpm-dev mariadb-dev postgresql-dev zlib-dev"
+ENV PECL_EXTS="redis"
+ENV PHP_EXTS="gd intl mysqli opcache pdo_mysql pdo_pgsql soap zip"
+RUN    apk update \
+    && apk upgrade \
+    && apk add --no-cache $RUN_DEPS \
+    && apk add -t .build-deps $BUILD_DEPS \
+    && docker-php-ext-install $PHP_EXTS \
+    && pecl install -o -f $PECL_EXTS \
+    && docker-php-ext-enable $PECL_EXTS \
+    && apk del .build-deps \
+    # Clear
+    && rm -rf /tmp/* /var/cache/apk/*
+
+RUN    mkdir -p setup \
+    && cd setup  \
+    && curl -sSL https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz -o ioncube.tar.gz \
+    && tar -xvf ioncube.tar.gz \
+    && ls -la ioncube \
+    && echo "bla" \
+    && ls -la ioncube/ioncube_loader_lin_5.6.so \
+    && ls -la /usr/local/lib/php/extensions/ \
+    && mv ./ioncube/ioncube_loader_lin_5.6.so /usr/local/lib/php/extensions/no-debug-non-zts-20131226/ioncube.so \
+    && docker-php-ext-enable ioncube \
+    && rm -rf setup
+
+COPY --from=composer:1.7 /usr/bin/composer /usr/bin/composer
