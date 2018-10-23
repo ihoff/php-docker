@@ -11,11 +11,12 @@ RUN    apk update \
     && docker-php-ext-install $PHP_EXTS \
     && pecl install -o -f $PECL_EXTS \
     && docker-php-ext-enable $PECL_EXTS \
-    && mkdir -p setup && cd setup && \
-    && curl -sSL https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz -o ioncube.tar.gz && \
-    && tar -xf ioncube.tar.gz && \
-    && mv ioncube/ioncube_loader_lin_7.1.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/ && \
-    && echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20160303/ioncube_loader_lin_7.1.so' >  /usr/local/etc/php-fpm.d/..data/00-ioncube.ini && \
+    && mkdir -p setup \
+    && cd setup  \
+    && curl -sSL https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz -o ioncube.tar.gz \
+    && tar -xf ioncube.tar.gz \
+    && mv ioncube/ioncube_loader_lin_7.1.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/ \
+    && echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20160303/ioncube_loader_lin_7.1.so' >  /usr/local/etc/php-fpm.d/..data/00-ioncube.ini \
     && apk del .build-deps \
     # Clear
     && rm -rf setup /tmp/* /var/cache/apk/*
