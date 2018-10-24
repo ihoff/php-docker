@@ -1,6 +1,6 @@
 FROM php:5.6.38-fpm-alpine3.8
 MAINTAINER Linus Lotz<l.lotz@reply.de>
-ENV RUN_DEPS="bash icu-libs libgd libintl libxml2 mysql-client postgresql-libs"
+ENV RUN_DEPS="bash icu-libs libgd libintl libxml2 mysql-client postgresql-libs git openssh-client"
 # ENV RUN_DEPS="bash icu-libs libgd libintl libxml2 mariadb-client-libs postgresql-libs"
 ENV BUILD_DEPS="${PHPIZE_DEPS} freetype-dev icu-dev libjpeg-turbo-dev libpng-dev libwebp-dev libxml2-dev libxpm-dev mariadb-dev postgresql-dev zlib-dev"
 ENV PECL_EXTS="redis"
